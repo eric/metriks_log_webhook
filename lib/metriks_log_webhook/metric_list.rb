@@ -1,34 +1,89 @@
+require 'metriks_log_webhook/sum_gauge'
+require 'metriks_log_webhook/average_gauge'
+
 module MetriksLogWebhook
   class MetricList
     def initialize(memcached, interval)
       @memcached = memcached
       @interval  = interval
       
-      @gauges   = []
+      @gauges = {}
       @counters = []
     end
 
     def add(data)
       case data[:type]
       when 'counter'
-        counter(data)
+        add_counter(data)
       when 'timer'
-        timer(data)
+        add_timer(data)
+      when 'utilization_timer'
+        add_utilization_timer(data)
+      when 'meter'
+        add_meter(data)
+      else
+        raise "Unknown data type: #{data[:type].inspect}"
       end
     end
 
-    def timer(data)
-      g = Gauge.new(data[:name], data[:time], :source => data[:source])
-      g.add(data[:count], )
-
+    def add_counter(data)
+      counter(data[:name], data[:time], data[:source], data[:count])
     end
 
-    def counter(data)
+    def add_timer(data)
+      average_gauge(data[:name] + '.mean', data[:time], data[:source], data[:mean])
+      sum_gauge(data[:name] + '.one_minute_rate', data[:time], data[:source], data[:one_minute_rate])
+    end
+
+    def add_utilization_timer(data)
+      average_gauge(data[:name] + '.mean', data[:time], data[:source], data[:mean])
+      sum_gauge(data[:name] + '.one_minute_rate', data[:time], data[:source], data[:one_minute_rate])
+      average_gauge(data[:name] + '.one_minute_utilization', data[:time], data[:source], data[:one_minute_utilization])
+    end
+
+    def add_meter(data)
+      sum_gauge(data[:name] + '.mean', data[:time], data[:source], data[:mean])
+      sum_gauge(data[:name] + '.one_minute_rate', data[:time], data[:source], data[:one_minute_rate])
+    end
+
+    def to_hash
+      gauges = @gauges.collect do |name, gauge|
+        gauge.to_hash
+      end
+
+      {
+        :counters => @counters,
+        :gauges => gauges
+      }
+    end
+
+    protected
+    def average_gauge(name, time, source, value)
+      time = rounded_time(time)
+      key = [ name, time, source ].join('/')
+      @gauges[key] ||= AverageGauge.new(name, time, :source => source)
+      @gauges[key].load(@memcached)
+      @gauges[key].mark(value)
+      @gauges[key].save(@memcached)
+    end
+
+    def sum_gauge(name, time, source, value)
+      time = rounded_time(time)
+      key = [ name, time, source ].join('/')
+      @gauges[key] ||= SumGauge.new(name, time, :source => source)
+      @gauges[key].load(@memcached)
+      @gauges[key].mark(value)
+      @gauges[key].save(@memcached)
+    end
+
+    def counter(name, time, source, value)
+      time = rounded_time(time)
+
       @counters << {
-        :name   => data[:name],
-        :time   => rounded_time(data[:time]),
-        :value  => data[:count],
-        :source => data[:source]
+        :name   => name,
+        :time   => time,
+        :source => source,
+        :value  => value
       }
     end
 

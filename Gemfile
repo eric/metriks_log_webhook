@@ -7,3 +7,9 @@ gem 'faraday_middleware'
 gem 'memcached'
 gem 'activesupport', '~> 2.3', :require => 'active_support'
 gem 'always_verify_ssl_certificates'
+
+group :test do
+  gem 'rack-test'
+  gem 'turn', '0.8.2'
+  gem 'mocha', :require => false
+end
