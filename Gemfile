@@ -10,8 +10,7 @@ gem 'activesupport', '~> 2.3', :require => 'active_support'
 group :production do
   gem 'pg'
 
-  # Use unicorn as the web server
-  gem 'unicorn'
+  gem 'thin'
 end
 
 group :test do
