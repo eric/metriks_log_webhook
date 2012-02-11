@@ -15,7 +15,7 @@ module MetriksLogWebhook
       set :metric_interval, 60
 
       set :cache, lambda { Dalli::Client.new }
-      set :metrics_client, LibratoMetrics.new(ENV['METRICS_EAMIL'], ENV['METRICS_TOKEN'])
+      set :metrics_client, LibratoMetrics.new(ENV['METRICS_EMAIL'], ENV['METRICS_TOKEN'])
     end
 
     get '/' do
