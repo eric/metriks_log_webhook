@@ -38,9 +38,8 @@ The easiest way would be to use [remote_syslog](https://github.com/papertrail/re
 
 The easiest way to run this is to grab the code and run a copy on heroku:
 
-    $ git clone git@github.com:eric/metriks_log_webhook.git
+    $ git clone git://github.com/eric/metriks_log_webhook.git
     $ cd metriks_log_webhook
-    $ bundle
     $ heroku create --stack cedar
     $ heroku addons:add memcache
     $ git push heroku master
