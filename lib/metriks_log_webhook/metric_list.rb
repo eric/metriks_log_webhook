@@ -6,7 +6,7 @@ module MetriksLogWebhook
     def initialize(memcached, interval)
       @memcached = memcached
       @interval  = interval
-      
+
       @gauges = {}
       @counters = []
     end
@@ -42,8 +42,7 @@ module MetriksLogWebhook
     end
 
     def add_meter(data)
-      sum_gauge(data[:name] + '.mean', data[:time], data[:source], data[:mean])
-      sum_gauge(data[:name] + '.one_minute_rate', data[:time], data[:source], data[:one_minute_rate])
+      sum_gauge(data[:name], data[:time], data[:source], data[:one_minute_rate])
     end
 
     def to_hash
