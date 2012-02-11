@@ -8,7 +8,7 @@ class AppTest < Test::Unit::TestCase
 
   def app
     MetriksLogWebhook::App.tap do |app|
-      app.set :memcached, stub(:get => nil, :set => nil)
+      app.set :cache, stub(:get => nil, :set => nil)
 
       app.metrics_client.connection.builder.tap do |c|
         c.swap 1, Faraday::Adapter::Test do |stub|

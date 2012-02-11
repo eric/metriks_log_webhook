@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'yajl'
 require 'active_support/core_ext/hash'
+require 'dalli'
 
 require 'metriks_log_webhook/librato_metrics'
 
@@ -13,7 +14,7 @@ module MetriksLogWebhook
       set :metrik_prefix, ENV['METRIK_PREFIX'] || 'metriks:'
       set :metric_interval, 60
 
-      set :memcached, lambda { Memcached.new(ENV['MEMCACHED']) }
+      set :cache, lambda { Dalli::Client.new }
       set :metrics_client, LibratoMetrics.new(ENV['METRICS_EAMIL'], ENV['METRICS_TOKEN'])
     end
 
@@ -25,7 +26,7 @@ module MetriksLogWebhook
       payload = HashWithIndifferentAccess.new(Yajl::Parser.parse(params[:payload]))
 
       parser      = MetrikLogParser.new(settings.metrik_prefix)
-      metric_list = MetricList.new(settings.memcached, settings.metric_interval)
+      metric_list = MetricList.new(settings.cache, settings.metric_interval)
 
       payload[:events].each do |event|
         if data = parser.parse(event[:message])
