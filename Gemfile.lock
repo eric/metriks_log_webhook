@@ -3,7 +3,6 @@ GEM
   specs:
     activesupport (2.3.11)
     addressable (2.2.6)
-    always_verify_ssl_certificates (0.3.0)
     ansi (1.4.2)
     dalli (1.1.4)
     faraday (0.7.6)
@@ -39,7 +38,6 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (~> 2.3)
-  always_verify_ssl_certificates
   dalli
   faraday
   faraday_middleware

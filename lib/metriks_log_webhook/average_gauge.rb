@@ -1,9 +1,10 @@
 module MetriksLogWebhook
   class AverageGauge
-    def initialize(name, time, options = {})
+    def initialize(name, time, source, cache)
       @name   = name
       @time   = time.to_i
-      @source = options[:source]
+      @source = source
+      @cache  = cache
 
       @data = {
         :count => 0,
@@ -12,8 +13,10 @@ module MetriksLogWebhook
         :min => nil,
         :max => nil
       }
+
+      load
     end
-    
+
     def mark(value)
       @data[:count] += 1
       @data[:sum] += value
@@ -30,7 +33,7 @@ module MetriksLogWebhook
 
     def merge!(other)
       other = other.symbolize_keys
-      
+
       @data[:count] += other[:count]
       @data[:sum] += other[:sum]
       @data[:sum_of_squares]   += other[:sum_of_squares]
@@ -48,14 +51,14 @@ module MetriksLogWebhook
       "average_gauge:#{@name}:#{@time}:#{@source}"
     end
 
-    def load(memcached)
-      if value = memcached.get(key)
+    def load
+      if value = @cache.get(key)
         merge!(value)
       end
     end
 
-    def save(memcached)
-      memcached.set(key, @data)
+    def save
+      @cache.set(key, @data, 1000)
     end
 
     def to_hash

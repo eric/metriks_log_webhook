@@ -60,19 +60,17 @@ module MetriksLogWebhook
     def average_gauge(name, time, source, value)
       time = rounded_time(time)
       key = [ name, time, source ].join('/')
-      @gauges[key] ||= AverageGauge.new(name, time, :source => source)
-      @gauges[key].load(@memcached)
+      @gauges[key] ||= AverageGauge.new(name, time, source, @memcached)
       @gauges[key].mark(value)
-      @gauges[key].save(@memcached)
+      @gauges[key].save
     end
 
     def sum_gauge(name, time, source, value)
       time = rounded_time(time)
       key = [ name, time, source ].join('/')
-      @gauges[key] ||= SumGauge.new(name, time, :source => source)
-      @gauges[key].load(@memcached)
+      @gauges[key] ||= SumGauge.new(name, time, source, @memcached)
       @gauges[key].mark(value)
-      @gauges[key].save(@memcached)
+      @gauges[key].save
     end
 
     def counter(name, time, source, value)

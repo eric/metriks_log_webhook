@@ -6,7 +6,6 @@ gem 'faraday'
 gem 'faraday_middleware'
 gem 'dalli'
 gem 'activesupport', '~> 2.3', :require => 'active_support'
-gem 'always_verify_ssl_certificates'
 
 group :production do
   gem 'pg'
