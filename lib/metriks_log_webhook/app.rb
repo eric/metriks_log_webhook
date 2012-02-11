@@ -37,6 +37,8 @@ module MetriksLogWebhook
         end
       end
 
+      metric_list.save
+
       body = metric_list.to_hash
 
       settings.metrics_client.submit(body)

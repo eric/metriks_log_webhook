@@ -45,6 +45,12 @@ module MetriksLogWebhook
       sum_gauge(data[:name], data[:time], data[:source], data[:one_minute_rate])
     end
 
+    def save
+      @gauges.each do |key, gauge|
+        gauge.save
+      end
+    end
+
     def to_hash
       gauges = @gauges.collect do |name, gauge|
         gauge.to_hash
@@ -62,7 +68,6 @@ module MetriksLogWebhook
       key = [ name, time, source ].join('/')
       @gauges[key] ||= AverageGauge.new(name, time, source, @memcached)
       @gauges[key].mark(value)
-      @gauges[key].save
     end
 
     def sum_gauge(name, time, source, value)
@@ -70,7 +75,6 @@ module MetriksLogWebhook
       key = [ name, time, source ].join('/')
       @gauges[key] ||= SumGauge.new(name, time, source, @memcached)
       @gauges[key].mark(value)
-      @gauges[key].save
     end
 
     def counter(name, time, source, value)
