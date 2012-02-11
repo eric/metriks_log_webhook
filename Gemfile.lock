@@ -16,6 +16,7 @@ GEM
     mocha (0.10.4)
       metaclass (~> 0.0.1)
     multipart-post (1.1.4)
+    pg (0.13.0)
     rack (1.4.1)
     rack-test (0.6.1)
       rack (>= 1.0)
@@ -37,6 +38,7 @@ DEPENDENCIES
   faraday_middleware
   memcached
   mocha
+  pg
   rack-test
   sinatra (~> 1.0)
   turn (= 0.8.2)
