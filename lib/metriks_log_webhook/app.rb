@@ -4,6 +4,8 @@ require 'active_support/core_ext/hash'
 require 'dalli'
 
 require 'metriks_log_webhook/librato_metrics'
+require 'metriks_log_webhook/metrik_log_parser'
+require 'metriks_log_webhook/metric_list'
 
 module MetriksLogWebhook
   class App < Sinatra::Base
