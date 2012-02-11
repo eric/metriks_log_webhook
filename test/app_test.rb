@@ -28,11 +28,11 @@ class AppTest < Test::Unit::TestCase
     payload = {
       :events => [
         {
-          :message => "metriks: name:test type:timer time:#{Time.now.to_i} mean:0.928 one_minute_rate:837.3",
+          :message => "metriks: name=test type=timer time=#{Time.now.to_i} mean=0.928 one_minute_rate=837.3",
           :hostname => 'app1'
         },
         {
-          :message => "metriks: name:test type:timer time:#{Time.now.to_i} mean:0.828 one_minute_rate:637.3",
+          :message => "metriks: name=test type=timer time=#{Time.now.to_i} mean=0.828 one_minute_rate=637.3",
           :hostname => 'app2'
         }
       ]

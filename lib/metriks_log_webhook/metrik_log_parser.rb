@@ -11,7 +11,7 @@ module MetriksLogWebhook
 
       h = HashWithIndifferentAccess.new
       data.split(' ').each do |entry|
-        key, value = entry.split(':', 2)
+        key, value = entry.split('=', 2)
         if value =~ /^(\d+)|(\d+\.\d+)$/
           value = value.to_f
         end
