@@ -33,12 +33,28 @@ module MetriksLogWebhook
     def add_timer(data)
       average_gauge(data[:name] + '.mean', data[:time], data[:source], data[:mean])
       sum_gauge(data[:name] + '.one_minute_rate', data[:time], data[:source], data[:one_minute_rate])
+
+      if data[:median]
+        average_gauge(data[:name] + '.median', data[:time], data[:source], data[:median])
+      end
+
+      if data[:"95th_percentile"]
+        average_gauge(data[:name] + '.95th_percentile', data[:time], data[:source], data[:"95th_percentile"])
+      end
     end
 
     def add_utilization_timer(data)
       average_gauge(data[:name] + '.mean', data[:time], data[:source], data[:mean])
       sum_gauge(data[:name] + '.one_minute_rate', data[:time], data[:source], data[:one_minute_rate])
       average_gauge(data[:name] + '.one_minute_utilization', data[:time], data[:source], data[:one_minute_utilization])
+
+      if data[:median]
+        average_gauge(data[:name] + '.median', data[:time], data[:source], data[:median])
+      end
+
+      if data[:"95th_percentile"]
+        average_gauge(data[:name] + '.95th_percentile', data[:time], data[:source], data[:"95th_percentile"])
+      end
     end
 
     def add_meter(data)
