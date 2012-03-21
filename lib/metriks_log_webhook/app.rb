@@ -7,6 +7,8 @@ require 'metriks_log_webhook/librato_metrics'
 require 'metriks_log_webhook/metrik_log_parser'
 require 'metriks_log_webhook/metric_list'
 
+$stdout.sync = true
+
 module MetriksLogWebhook
   class App < Sinatra::Base
     configure do
