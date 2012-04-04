@@ -18,7 +18,7 @@ module MetriksLogWebhook
       set :metrik_prefix, ENV['METRIK_PREFIX'] || 'metriks:'
       set :metric_interval, 60
 
-      set :cache, lambda { Dalli::Client.new }
+      set :cache, lambda { Dalli::Client.new(nil, :socket_max_failures => 7) }
       set :metrics_client, LibratoMetrics.new(ENV['METRICS_EMAIL'], ENV['METRICS_TOKEN'])
     end
 
